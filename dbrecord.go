@@ -8,6 +8,9 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
+// DbRecord проверяет если юзер есть в базе, если нет, то добавляет
+// сделано это для того чтобы потом рассылать через бота сообщения
+// тем юзерам которые есть в базе
 func DbRecord(update *tgbotapi.Update, db *sql.DB) {
     if update.Message.Chat.ID != 0 {
         userID := update.Message.From.ID
