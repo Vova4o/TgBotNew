@@ -2,6 +2,9 @@ package main
 
 import tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 
+// CallBackAnswer обрабатывает нажатие кнопок
+// по идее должна писать нужный текст и подсавлять
+// нужную клаву
 func CallBackAnswer(data string) (string, tgbotapi.InlineKeyboardMarkup) {
 	switch data {
 	case "1":
