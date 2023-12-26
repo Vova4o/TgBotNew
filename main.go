@@ -46,15 +46,14 @@ func main() {
 	// и обрабатываем каждое по очереди
 	for update := range updates {
 
-		DbRecord(&update, db)
-
 		if update.CallbackQuery != nil {
 			QueryData := update.CallbackQuery.Data
 			if QueryData != "" {
 				// Создаем новое сообщение, которое отправим боту
 				msg := tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Data)
 
-				msg.Text = CallBackAnswer(QueryData)
+				msg.Text, msg.ReplyMarkup = CallBackAnswer(QueryData)
+				msg.ParseMode = "markdown"
 				// Отправляем
 				if _, err := bot.Send(msg); err != nil {
 					log.Panic(err)
@@ -65,16 +64,20 @@ func main() {
 		if update.Message == nil { // ignore non-Message updates
 			continue
 		}
-		// Создаем текст сообщения для отправки пользователю
-		text := "Hello Welcome to our bot!"
-		// Создаем сообщение для отправки пользователю
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
-		// Используем switch для выбора действия по тексту сообщения
+
+		DbRecord(&update, db)
+		// конструируем ответное сообщение
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Пожалуйста, нажмите *start* для начала работы с ботом")
+		// делаем шрифт жирным
+		msg.ParseMode = "markdown"
+		msg.ReplyMarkup = mainKeyboard
+
 		switch update.Message.Text {
-		case "/openkeymap":
-			msg.ReplyMarkup = keyboard
-		case "/closekeymap":
-			msg.ReplyMarkup = tgbotapi.NewRemoveKeyboard(true)
+		case "/start":
+			msg.Text = "Привет, добро пожаловать в наш бот!\n Ниже представлены кнопки для навигации по боту."
+			msg.ReplyMarkup = numericKeyboard
+			// msg.ReplyMarkup = tgbotapi.NewRemoveKeyboard(true)
+
 		}
 		// Отправляем сообщение пользователю
 		if _, err := bot.Send(msg); err != nil {

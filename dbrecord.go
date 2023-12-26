@@ -12,7 +12,7 @@ import (
 // сделано это для того чтобы потом рассылать через бота сообщения
 // тем юзерам которые есть в базе
 func DbRecord(update *tgbotapi.Update, db *sql.DB) {
-	if update.Message.Chat.ID != 0 {
+	if update.Message.From.ID != 0 {
 		userID := update.Message.From.ID
 		userName := update.Message.Chat.UserName
 
