@@ -11,8 +11,6 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-var QueryData tgbotapi.CallbackQuery
-
 func init() {
 	envErr := godotenv.Load(".env")
 	if envErr != nil {
@@ -50,18 +48,19 @@ func main() {
 
 		DbRecord(&update, db)
 
-		QueryData = *update.CallbackQuery
-		if QueryData.Data != "" {
-			// Создаем новое сообщение, которое отправим боту
-			msg := tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Data)
+		if update.CallbackQuery != nil {
+			QueryData := update.CallbackQuery.Data
+			if QueryData != "" {
+				// Создаем новое сообщение, которое отправим боту
+				msg := tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Data)
 
-			msg.Text = CallBackAnswer(QueryData)
-			// Отправляем
-			if _, err := bot.Send(msg); err != nil {
-				log.Panic(err)
+				msg.Text = CallBackAnswer(QueryData)
+				// Отправляем
+				if _, err := bot.Send(msg); err != nil {
+					log.Panic(err)
+				}
 			}
 		}
-
 		// Проверяем, что сообщение не пустое
 		if update.Message == nil { // ignore non-Message updates
 			continue
