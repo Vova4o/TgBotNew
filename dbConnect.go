@@ -19,7 +19,6 @@ func dbConnect() (*sql.DB, error) {
 	var dbName = os.Getenv("DBNAME")
 
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, ip, port, dbName)
-	fmt.Println(connectionString)
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		fmt.Printf("Error connecting to MySQL: %s\n", err)
