@@ -19,6 +19,8 @@ func init() {
 	}
 }
 
+
+
 // var tableName = os.Getenv("TABLE_NAME")
 var ChatIdSQL = os.Getenv("ROW_NAME")
 
@@ -46,6 +48,7 @@ func main() {
 	// и обрабатываем каждое по очереди
 	for update := range updates {
 
+		// Если пришел запрос кнопок, делаем возврат через функцию CallBackAnswer
 		if update.CallbackQuery != nil {
 			QueryData := update.CallbackQuery.Data
 			if QueryData != "" {
